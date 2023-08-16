@@ -27,3 +27,8 @@ mod back_of_house {
 }
 ```
 
+## Structs and enums
+
+O struct e campos deles seguem a mesma regra de visibiliade para modulos. Em que os modulos pai so tem acesso caso struct e os campos tenho pub.
+
+Já para enum, a visibilidade serve apenas para ela em si. (Não se tem visibilidade em cada valor)
