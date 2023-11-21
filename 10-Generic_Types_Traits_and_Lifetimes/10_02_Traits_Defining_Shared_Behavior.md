@@ -79,3 +79,108 @@ impl Summary for Tweet {
     println!("1 new tweet: {}", tweet.summarize());
 
 ```
+
+## Trait as parameters (Trait bound)
+
+```rust
+pub fn notify(item: &impl Summary) {
+    println!("Breaking news! {}", item.summarize());
+}
+```
+
+A funçao exige que o parametro implemente a trait `Summmary`, sendo assim nos casos acima seria possivel passar tanto `Tweet` quanto `NewsArticle` 
+
+Essa sintaxe é um atalho para essa usando generics:
+
+```rust
+pub fn notify<T: Summary>(item: &T) {
+    println!("Breaking news! {}", item.summarize());
+}
+```
+
+## Se quisermos garantir mais de um trait bound, usamos + nas duas formas:
+
+```rust
+pub fn notify(item: &(impl Summary + Display)) {
+```
+
+```rust
+pub fn notify<T: Summary + Display>(item: &T) {
+```
+
+Podemos tambem usar o where para melhorar legibilidade em casos como 
+
+```rust
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 {
+```
+
+Fica melhor assim:
+
+```rust
+fn some_function<T, U>(t: &T, u: &U) -> i32
+where
+    T: Display + Clone,
+    U: Clone + Debug,
+{
+```
+
+## Retornando types que implementam Traits
+
+É possivel usar `impl Trait` para retornar um valor em uma função.
+
+
+```rust
+fn returns_summarizable() -> impl Summary {
+    Tweet {
+        username: String::from("horse_ebooks"),
+        content: String::from(
+            "of course, as you probably already know, people",
+        ),
+        reply: false,
+        retweet: false,
+    }
+}
+```
+
+A função retorna um Tweet, mas o chamador nao precisa de saber disso.
+Só pode ser utilizado se vc está retornando um single type.
+
+## Usando trait baound para condicionalmento implementar metodos
+
+Esse caso abaixo, o cmp_display so vai ser implementado quanto o tipo T implementar `Display` e `PartialOrd` 
+
+```rust
+use std::fmt::Display;
+
+struct Pair<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Pair<T> {
+    fn new(x: T, y: T) -> Self {
+        Self { x, y }
+    }
+}
+
+impl<T: Display + PartialOrd> Pair<T> {
+    fn cmp_display(&self) {
+        if self.x >= self.y {
+            println!("The largest member is x = {}", self.x);
+        } else {
+            println!("The largest member is y = {}", self.y);
+        }
+    }
+}
+```
+
+## Blanket implementations
+
+Sao implementacoes condicionais, que imeplementam uma trait para qualquer tipo que implemente outra trait. É muito utilizada na std do Rust. Por exemplo, a Std implementa a `ToString` trait para qualquer tipo que implemente a trait Display. Seria como:
+
+```rust
+impl<T: Display> ToString for T {
+    // --snip--
+}
+```
+
