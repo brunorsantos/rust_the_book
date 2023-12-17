@@ -156,7 +156,7 @@ Criando um metodo com nome x em Point<T> que retorna uma referencia para o dado 
 
 Temos que declarar o T depois do impl, para o Rust identificar que o tipo é generico e nao concreto. Assim metodos escritos com um impl que declaram o tipo generico, vão ser definidos em qualquer instancia do tipo, nao importa qual tipo tipo concreto vai substituir o tipo generico
 
-Tambem é possivel especificar limitacoes em tipo genericos. Definindo metodos sobre apenas um tipo espeficico. Podemos por exemplo implementar metodos apenas para Point<f32>, ao inves para qualquer Point<T>. Nesse caso nao colocar tipos depois de impl
+Tambem é possivel especificar limitacoes em tipo genericos. Definindo metodos sobre apenas um tipo espeficico. Podemos por exemplo implementar metodos apenas para `Point<f32>`, ao inves para qualquer `Point<T>`. Nesse caso nao colocar tipos depois de impl
 
 ```rust
 impl Point<f32> {
