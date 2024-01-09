@@ -43,3 +43,58 @@ Nesse caso, rust vai inferir os tipos do parametros e retorno como String, apos 
 
 ## Capturando referencias ou movendo ownership
 
+3 Formas de capturar o ambiente:
+
+- borrowing immutably
+- borrowing mutably 
+- taking ownership
+
+Closure decide qual forma baseado no corpo da funcao
+
+
+Nesse exmplo a closure captura como borowing immutable pois so é necessario para fazer um print:
+
+Como é um referencia immutavel pode ser utilizar a mesma referencia antes de executar a funcao
+```rust
+fn main() {
+    let list = vec![1, 2, 3];
+    println!("Before defining closure: {:?}", list);
+
+    let only_borrows = || println!("From closure: {:?}", list);
+
+    println!("Before calling closure: {:?}", list);
+    only_borrows();
+    println!("After calling closure: {:?}", list);
+}
+```
+
+Nesse exemplo, como precisamos inserir valores na lista, a closure captura como referencia mutable.
+
+A variavel list, nao pode ser utilizada entre esse borrow e a execucao do closure. Pois nao é possivel alterar a varivel com uma referencia mutavel ativa.
+```rust
+fn main() {
+    let mut list = vec![1, 2, 3];
+    println!("Before defining closure: {:?}", list);
+
+    let mut borrows_mutably = || list.push(7);
+
+    borrows_mutably();
+    println!("After calling closure: {:?}", list);
+}
+```
+
+
+
+Para forçar a transferencia de ownership para closure, usamos a keyword `move`.
+```rust
+use std::thread;
+
+fn main() {
+    let list = vec![1, 2, 3];
+    println!("Before defining closure: {:?}", list);
+
+    thread::spawn(move || println!("From thread: {:?}", list))
+        .join()
+        .unwrap();
+}
+```
