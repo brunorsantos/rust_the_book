@@ -74,3 +74,15 @@ Esses metodos sao chamados de `consuming adaptors`, pois eles usam o iterator. E
 
 ## Metodos que produzem outro iterator
 
+`Iterator adaptors` sao os metodos definidos na trait `Iterator` que nao consumem o iterator. E sim produzem outro mudando o aspecto do iterator.
+
+Lembrando sempre que para o uso final, deve se usar um metodo que consome o iterator. Pois o iterator produzido é lazy
+
+```rust
+    let v1: Vec<i32> = vec![1, 2, 3];
+
+    let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
+
+    assert_eq!(v2, vec![2, 3, 4]);
+```
+
